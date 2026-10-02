@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WatchWise — AI Movie Recommendations</title>
+  <meta name="description" content="Discover your next favorite film with WatchWise — AI-powered movie recommendations tailored just for you." />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+</head>
+<body>
+
+<!-- ======================== HEADER ======================== -->
+<header class="header">
+  <nav class="nav">
+    <a href="#" class="nav-logo" id="nav-logo">
+      <div class="logo-icon"><i class="bi bi-film"></i></div>
+      <span class="logo-text">WatchWise</span>
+    </a>
+
+    <div class="search-wrapper">
+      <i class="bi bi-search search-icon"></i>
+      <input
+        type="text"
+        class="search-bar"
+        id="search-input"
+        placeholder="Search movies, genres, directors..."
+        autocomplete="off"
+        spellcheck="false"
+      />
+      <button class="search-clear" id="search-clear" aria-label="Clear search"><i class="bi bi-x-lg"></i></button>
+    </div>
+
+    <ul class="nav-links">
+      <li><a href="#" class="nav-link active" data-view="home" id="nav-home"><i class="bi bi-house-door-fill"></i> Home</a></li>
+      <li><a href="#" class="nav-link" data-view="library" id="nav-library"><i class="bi bi-collection-fill"></i> Library</a></li>
+      <li id="nav-auth-item">
+        <a href="#" class="nav-link nav-auth-btn" data-view="auth" id="nav-auth-btn"><i class="bi bi-person-circle"></i> <span>Sign In</span></a>
+      </li>
+    </ul>
+  </nav>
+</header>
+
+<!-- ======================== MAIN ======================== -->
+<main class="main">
+
+  <!-- ===== HOME VIEW ===== -->
+  <div id="view-home">
+
+    <!-- Hero Section with Projector Lighting Background -->
+    <section class="hero">
+      <div class="hero-bg"></div>
+      <div class="hero-content">
+        <div class="hero-badge"><i class="bi bi-camera-reels-fill"></i> AI-Powered Movie Recommendation System</div>
+        <h1><span class="gradient-text">Discover Your Next</span><br/>Favorite Film</h1>
+        <p>WatchWise analyzes thousands of movies to find exactly what you'll love — filter by genre, explore trending masterpieces, and build your personalized library.</p>
+        <div class="hero-actions">
+          <button class="btn btn-primary" id="hero-explore-btn"><i class="bi bi-tags-fill"></i> Select by Genre</button>
+          <button class="btn btn-ghost" id="hero-library-btn"><i class="bi bi-bookmark-fill"></i> My Library</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stats strip -->
+    <div class="stats-strip" id="stats-strip">
+      <div class="stat-chip"><span class="stat-dot"></span> 45,000+ Movies Loaded</div>
+      <div class="stat-chip"><span class="stat-dot"></span> 12+ Film Genres</div>
+      <div class="stat-chip" id="stat-status"><span class="stat-dot connecting" id="status-dot"></span> Connecting...</div>
+    </div>
+
+    <!-- Browse By Genre Section -->
+    <section class="section" id="genre-section">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title"><i class="bi bi-grid-3x3-gap-fill icon"></i> Select Movies by Genre</h2>
+          <p class="section-subtitle">Pick any genre to instantly filter and showcase top-rated films</p>
+        </div>
+        <div class="genre-status-info" id="genre-status-info">
+          <span class="genre-status-tag" id="genre-status-tag"><i class="bi bi-funnel-fill"></i> <span id="genre-selected-text">All Genres (46 Movies)</span></span>
+        </div>
+      </div>
+
+      <!-- Genre Pills Filter Bar -->
+      <div class="genre-pill-bar-container">
+        <div class="genre-pill-bar" id="genre-pill-bar">
+          <!-- Dynamically populated chips -->
+        </div>
+      </div>
+
+      <!-- Genre Movies Grid -->
+      <div class="movies-grid large" id="genre-movies-grid"></div>
+    </section>
+
+    <!-- Featured Movie -->
+    <section class="section" id="featured-section">
+      <div id="featured-hero-container"></div>
+    </section>
+
+    <!-- Trending Section -->
+    <section class="section">
+      <div class="section-header">
+        <h2 class="section-title"><i class="bi bi-fire icon"></i> Top Rated Masterpieces</h2>
+        <a href="#" class="see-all" id="see-all-trending">See all <i class="bi bi-arrow-right"></i></a>
+      </div>
+      <div class="scroll-row-wrap">
+        <div class="scroll-row" id="trending-row"></div>
+      </div>
+    </section>
+
+    <!-- Top Picks Section -->
+    <section class="section">
+      <div class="section-header">
+        <h2 class="section-title"><i class="bi bi-trophy-fill icon"></i> Featured Picks</h2>
+        <a href="#" class="see-all" id="see-all-picks">See all <i class="bi bi-arrow-right"></i></a>
+      </div>
+      <div class="movies-grid large" id="picks-grid"></div>
+    </section>
+
+  </div>
+
+  <!-- ===== SEARCH VIEW ===== -->
+  <div id="view-search" style="display:none;">
+    <section class="search-section">
+      <div class="search-results-header">
+        <h2 class="search-results-title" id="search-results-title">Results</h2>
+        <p class="search-count" id="search-count"></p>
+      </div>
+      <div class="movies-grid large" id="search-grid"></div>
+      <div class="no-results" id="no-results" style="display:none;">
+        <div class="no-results-icon"><i class="bi bi-search"></i></div>
+        <h3>No movies found</h3>
+        <p>Try different keywords or check the spelling</p>
+      </div>
+    </section>
+  </div>
+
+  <!-- ===== LIBRARY VIEW ===== -->
+  <div id="view-library" style="display:none;">
+    <section>
+      <div class="section-header" style="margin-bottom: 1.5rem;">
+        <h2 class="section-title"><i class="bi bi-collection-fill icon"></i> My Library</h2>
+      </div>
+      <div class="library-tabs">
+        <button class="tab-btn active" id="tab-favorites" data-tab="favorites"><i class="bi bi-heart-fill"></i> Favorites</button>
+        <button class="tab-btn" id="tab-watchlist" data-tab="watchlist"><i class="bi bi-eye-fill"></i> Watchlist</button>
+      </div>
+      <div id="library-content"></div>
+    </section>
+  </div>
+
+  <!-- ===== AUTH / LOGIN VIEW ===== -->
+  <div id="view-auth" style="display:none;">
+    <div class="auth-wrapper">
+      <div class="auth-card">
+        <div class="auth-glow"></div>
+        <div class="auth-header">
+          <div class="auth-badge"><i class="bi bi-shield-lock-fill"></i> Secure Access</div>
+          <h2 class="auth-title" id="auth-title">Welcome to WatchWise</h2>
+          <p class="auth-subtitle" id="auth-subtitle">Sign in to sync your favorites, watchlist, and personalized recommendations across devices.</p>
+        </div>
+
+        <!-- Auth Tabs -->
+        <div class="auth-tabs">
+          <button type="button" class="auth-tab-btn active" id="tab-login" data-tab="login">
+            <i class="bi bi-box-arrow-in-right"></i> Sign In
+          </button>
+          <button type="button" class="auth-tab-btn" id="tab-register" data-tab="register">
+            <i class="bi bi-person-plus-fill"></i> Create Account
+          </button>
+        </div>
+
+        <!-- Sign In Form -->
+        <form id="form-login" class="auth-form" autocomplete="on">
+          <div class="form-group">
+            <label for="login-email"><i class="bi bi-envelope-fill"></i> Email Address</label>
+            <div class="input-wrap">
+              <i class="bi bi-at input-icon"></i>
+              <input type="email" id="login-email" class="form-control" placeholder="name@example.com" value="demo@watchwise.tv" required autocomplete="email" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="form-label-row">
+              <label for="login-password"><i class="bi bi-key-fill"></i> Password</label>
+              <a href="#" class="form-sublink" id="link-forgot-pass">Forgot password?</a>
+            </div>
+            <div class="input-wrap">
+              <i class="bi bi-lock-fill input-icon"></i>
+              <input type="password" id="login-password" class="form-control" placeholder="••••••••" value="password123" required autocomplete="current-password" />
+              <button type="button" class="btn-toggle-pass" data-target="login-password" aria-label="Toggle password visibility">
+                <i class="bi bi-eye"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-options">
+            <label class="checkbox-label">
+              <input type="checkbox" id="login-remember" checked />
+              <span class="custom-checkbox"></span>
+              <span>Keep me signed in</span>
+            </label>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-auth-submit" id="btn-login-submit">
+            <i class="bi bi-box-arrow-in-right"></i> <span>Sign In</span>
+          </button>
+
+          <div class="auth-divider"><span>OR</span></div>
+
+          <button type="button" class="btn btn-demo-quick" id="btn-demo-login">
+            <i class="bi bi-lightning-charge-fill"></i> Quick Demo Sign In
+          </button>
+        </form>
+
+        <!-- Create Account Form -->
+        <form id="form-register" class="auth-form" style="display:none;" autocomplete="on">
+          <div class="form-group">
+            <label for="reg-name"><i class="bi bi-person-fill"></i> Full Name</label>
+            <div class="input-wrap">
+              <i class="bi bi-person input-icon"></i>
+              <input type="text" id="reg-name" class="form-control" placeholder="Alex Morgan" required autocomplete="name" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="reg-email"><i class="bi bi-envelope-fill"></i> Email Address</label>
+            <div class="input-wrap">
+              <i class="bi bi-at input-icon"></i>
+              <input type="email" id="reg-email" class="form-control" placeholder="alex@example.com" required autocomplete="email" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="reg-password"><i class="bi bi-key-fill"></i> Password</label>
+            <div class="input-wrap">
+              <i class="bi bi-lock-fill input-icon"></i>
+              <input type="password" id="reg-password" class="form-control" placeholder="At least 6 characters" required autocomplete="new-password" minlength="6" />
+              <button type="button" class="btn-toggle-pass" data-target="reg-password" aria-label="Toggle password visibility">
+                <i class="bi bi-eye"></i>
+              </button>
+            </div>
+            <span class="form-hint"><i class="bi bi-info-circle"></i> Must be at least 6 characters long</span>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-auth-submit" id="btn-reg-submit">
+            <i class="bi bi-person-plus-fill"></i> <span>Create Account</span>
+          </button>
+        </form>
+
+        <!-- Perks indicator -->
+        <div class="auth-perks">
+          <div class="perk-item"><i class="bi bi-check2-circle"></i> Cloud sync favorites</div>
+          <div class="perk-item"><i class="bi bi-check2-circle"></i> Custom watchlist</div>
+          <div class="perk-item"><i class="bi bi-check2-circle"></i> Smart recommendations</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- ======================== FOOTER ======================== -->
+<footer class="footer">
+  <p><i class="bi bi-film"></i> WatchWise — Discover great movies powered by AI &nbsp;•&nbsp; Built with <i class="bi bi-heart-fill" style="color: var(--accent-pink);"></i></p>
+</footer>
+
+<!-- ======================== MOVIE MODAL ======================== -->
+<div class="modal-backdrop" id="modal-backdrop">
+  <div class="modal" id="modal" role="dialog" aria-modal="true">
+    <div class="modal-hero">
+      <img class="modal-hero-img" id="modal-hero-img" src="" alt="" />
+      <div class="modal-hero-overlay"></div>
+      <button class="modal-close" id="modal-close" aria-label="Close modal"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <div class="modal-body">
+      <h2 class="modal-title" id="modal-title"></h2>
+      <div class="modal-genres" id="modal-genres"></div>
+      <div class="modal-meta" id="modal-meta"></div>
+      <p class="modal-overview" id="modal-overview"></p>
+      <div class="modal-actions" id="modal-actions"></div>
+      <!-- Recommendations Section -->
+      <div class="modal-recommendations" id="modal-recommendations"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ======================== TOAST CONTAINER ======================== -->
+<div class="toast-container" id="toast-container"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
