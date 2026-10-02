@@ -98,7 +98,7 @@ WatchWise/
 ├── .gitignore
 └── README.md
 ```
-
+deployed Link :- https://watchwise-anrq.onrender.com/
 ## 🤖 ML Architecture
 
 The recommendation engine uses **TF-IDF (Term Frequency-Inverse Document Frequency)** vectorization on movie metadata (title, genres, overview, tags) combined with **cosine similarity** to find similar movies.
